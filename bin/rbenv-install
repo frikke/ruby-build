@@ -178,6 +178,10 @@ PREFIX="${RBENV_ROOT}/versions/${VERSION_NAME}"
 if [ -d "${PREFIX}/bin" ]; then
   if [ -z "$FORCE" ] && [ -z "$SKIP_EXISTING" ]; then
     echo "rbenv: $PREFIX already exists" >&2
+    if [ ! -t 0 ]; then
+      echo "rbenv: must use \`--force' or \`--skip-existing' in non-interactive mode" >&2
+      exit 1
+    fi
     read -rp "continue with installation? (y/N) "
 
     case "$REPLY" in
@@ -246,8 +250,10 @@ if [ "$STATUS" == "2" ]; then
       printf ":\n\n"
       echo "  brew upgrade ruby-build"
     elif [ -d "${here}/.git" ]; then
+      display_here="$here"
+      [[ -z "${HOME%/}" || $here != "${HOME}/"* ]] || display_here="~${here#"$HOME"}"
       printf ":\n\n"
-      echo "  git -C ${here/${HOME}\//~/} pull"
+      echo "  git -C $display_here pull"
     else
       printf ".\n"
     fi

@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: ruby-build
 .\"    Author: Mislav Marohnić
-.\" Generator: Asciidoctor 2.0.20
-.\"      Date: 2023-11-08
+.\" Generator: Asciidoctor 2.0.23
+.\"      Date: 2024-11-06
 .\"    Manual: ruby-build Manual
-.\"    Source: ruby-build 20231107
+.\"    Source: ruby-build 20250127
 .\"  Language: English
 .\"
-.TH "RUBY\-BUILD" "1" "2023-11-08" "ruby\-build 20231107" "ruby\-build Manual"
+.TH "RUBY\-BUILD" "1" "2024-11-06" "ruby\-build 20250127" "ruby\-build Manual"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -31,7 +31,7 @@
 ruby-build \- Download, compile, and install a version of Ruby
 .SH "SYNOPSIS"
 .sp
-ruby\-build [\-kpv] \fI<definition>\fP \fI<prefix>\fP [\-\- \fI<configure\-args>\fP...]
+ruby\-build [\-dvpk] \fI<definition>\fP \fI<prefix>\fP [\-\- \fI<configure\-args>\fP...]
 .br
 ruby\-build {\-\-list|\-\-definitions}
 .br
@@ -40,6 +40,9 @@ ruby\-build \-\-version
 .sp
 ruby\-build downloads, compiles, and installs a Ruby version named by the
 \fIdefinition\fP argument into the location specified by \fIprefix\fP.
+.sp
+The \fIdefinition\fP argument can optionally start with "ruby\-", in which case
+it resolves to a CRuby that matches the version number that follows.
 .sp
 The \fIdefinition\fP argument can be a path to a file on disk, in which case
 it is sourced into ruby\-build as a bash script.
@@ -65,6 +68,11 @@ List all local definitions, including outdated ones
 \fB\-\-version\fP
 .RS 4
 Show version of ruby\-build
+.RE
+.sp
+\fB\-d, \-\-dir\fP
+.RS 4
+Install the Ruby in the \fIprefix/definition\fP destination instead of directly in \fIprefix\fP
 .RE
 .sp
 \fB\-v, \-\-verbose\fP
@@ -93,23 +101,42 @@ Resolve names to IPv6 addresses only
 .RE
 .SH "EXAMPLES"
 .sp
-Install Ruby version 3.2.2 under \f(CR/opt/rubies\fP while tweaking some
-configuration options:
+Install a Ruby version while tweaking some configuration options:
 .sp
 .if n .RS 4
 .nf
 .fam C
-$ ruby\-build 3.2.2 /opt/rubies/ruby\-3.2.2 \-\- \-\-disable\-install\-doc \-\-with\-openssl\-dir=/opt/openssl
+$ ruby\-build 3.2.2 /path/to/destination \-\- \-\-disable\-install\-doc \-\-with\-openssl\-dir=/opt/openssl
 .fam
 .fi
 .if n .RE
 .sp
-Usage as rbenv plugin:
+Install a Ruby version to \f(CR~/.rubies/ruby\-3.2.2\fP:
 .sp
 .if n .RS 4
 .nf
 .fam C
-$ rbenv install 3.2.2
+$ ruby\-build \-\-dir ruby\-3.2.2 ~/.rubies
+.fam
+.fi
+.if n .RE
+.sp
+Install a Ruby version to \f(CR~/.rbenv/versions/3.3.5\fP:
+.sp
+.if n .RS 4
+.nf
+.fam C
+$ ruby\-build \-\-dir 3.3.5 ~/.rbenv/versions
+.fam
+.fi
+.if n .RE
+.sp
+Usage as rbenv plugin, accomplishes the same as the previous example:
+.sp
+.if n .RS 4
+.nf
+.fam C
+$ rbenv install 3.3.5
 .fam
 .fi
 .if n .RE
