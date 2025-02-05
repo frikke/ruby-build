@@ -40,14 +40,16 @@ PREFIX=/usr/local ./ruby-build-*/install.sh
 
 ```sh
 # As a standalone program
-$ ruby-build --list                        # lists available versions of Ruby
-$ ruby-build 3.2.2 /opt/rubies/ruby-3.2.2  # installs Ruby 3.2.2
+$ ruby-build --list                        # lists latest stable releases for each Ruby
+$ ruby-build --definitions                 # lists all definitions, including outdated ones
+$ ruby-build 3.2.2 ~/.rubies/ruby-3.2.2    # installs Ruby 3.2.2
+$ ruby-build -d ruby-3.2.2 ~/.rubies       # alternate form for the previous example
 
 # As an rbenv plugin
 $ rbenv install 3.2.2  # installs Ruby 3.2.2 to ~/.rbenv/versions/3.2.2
 ```
 
-> **Warning**  
+> [!WARNING]
 > ruby-build mostly does not verify that system dependencies are present before downloading and attempting to compile Ruby from source. Please ensure that [all requisite libraries][build-env] such as build tools and development headers are already present on your system.
 
 Basically, what ruby-build does when installing a Ruby version is this:
@@ -83,9 +85,10 @@ The build process may be configured through the following environment variables:
 | `RUBY_BUILD_MIRROR_URL`         | Custom mirror URL root.                                                                          |
 | `RUBY_BUILD_MIRROR_PACKAGE_URL` | Custom complete mirror URL (e.g. http://mirror.example.com/package-1.0.0.tar.gz).                |
 | `RUBY_BUILD_SKIP_MIRROR`        | Bypass the download mirror and fetch all package files from their original URLs.                 |
-| `RUBY_BUILD_ROOT`               | Custom build definition directory. (Default: `share/ruby-build`)                                 |
 | `RUBY_BUILD_TARBALL_OVERRIDE`   | Override the URL to fetch the ruby tarball from, optionally followed by `#checksum`.             |
-| `RUBY_BUILD_DEFINITIONS`        | Additional paths to search for build definitions. (Colon-separated list)                         |
+| `RUBY_BUILD_DEFINITIONS`        | Colon-separated list of paths to search for build definition files.                              |
+| `RUBY_BUILD_ROOT`               | The path prefix to search for build definitions files. *Deprecated:* use `RUBY_BUILD_DEFINITIONS`|
+| `RUBY_BUILD_VENDOR_OPENSSL`     | Build and vendor openssl even if the system openssl is compatible                                |
 | `CC`                            | Path to the C compiler.                                                                          |
 | `RUBY_CFLAGS`                   | Additional `CFLAGS` options (_e.g.,_ to override `-O3`).                                         |
 | `CONFIGURE_OPTS`                | Additional `./configure` options.                                                                |

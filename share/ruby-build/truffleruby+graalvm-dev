@@ -1,19 +1,24 @@
 platform="$(uname -s)-$(uname -m)"
 case $platform in
 Linux-x86_64)
-  install_package "truffleruby+graalvm-dev" "https://github.com/graalvm/graalvm-ce-dev-builds/releases/latest/download/truffleruby-community-jvm-dev-linux-amd64.tar.gz" truffleruby
+  url="https://github.com/graalvm/graal-languages-ea-builds/raw/HEAD/truffleruby/versions/latest-jvm-linux-amd64.url"
   ;;
 Linux-aarch64)
-  install_package "truffleruby+graalvm-dev" "https://github.com/graalvm/graalvm-ce-dev-builds/releases/latest/download/truffleruby-community-jvm-dev-linux-aarch64.tar.gz" truffleruby
+  url="https://github.com/graalvm/graal-languages-ea-builds/raw/HEAD/truffleruby/versions/latest-jvm-linux-aarch64.url"
   ;;
 Darwin-x86_64)
-  install_package "truffleruby+graalvm-dev" "https://github.com/graalvm/graalvm-ce-dev-builds/releases/latest/download/truffleruby-community-jvm-dev-macos-amd64.tar.gz" truffleruby
+  url="https://github.com/graalvm/graal-languages-ea-builds/raw/HEAD/truffleruby/versions/latest-jvm-darwin-amd64.url"
   ;;
 Darwin-arm64)
-  install_package "truffleruby+graalvm-dev" "https://github.com/graalvm/graalvm-ce-dev-builds/releases/latest/download/truffleruby-community-jvm-dev-macos-aarch64.tar.gz" truffleruby
+  url="https://github.com/graalvm/graal-languages-ea-builds/raw/HEAD/truffleruby/versions/latest-jvm-darwin-aarch64.url"
   ;;
 *)
   colorize 1 "Unsupported platform: $platform"
   return 1
   ;;
 esac
+
+urlfile="$(mktemp "${TMP}/truffleruby.XXXXXX")"
+http get "$url" "$urlfile"
+install_package "truffleruby+graalvm-dev" "$(<"$urlfile")" truffleruby
+rm -f "$urlfile"
